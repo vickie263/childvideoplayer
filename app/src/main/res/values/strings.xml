@@ -1,0 +1,19 @@
+<resources>
+    <string name="app_name">super_simple_song</string>
+    <string name="storage_rationale">请打开权限，用以打开音乐</string>
+    <string name="toast_cannot_find_file">没有找到文件！</string>
+    <string name="toast_permission_denied">打开文件需要先申请权限！</string>
+    <string name="dialog_msg">从喜爱名单中删除？</string>
+    <string name="dialog_negative">再想想</string>
+    <string name="dialog_positive">确定</string>
+    <string name="likepage_title">喜爱的歌</string>
+    <string name="playpage_novideo">找不到视频啦！</string>
+    <string name="settingpage_title">设置</string>
+    <string name="usingtime_text">使用超过下列时间后，强制休息2个小时:</string>
+    <string name="usingtime_radio_0">无限制</string>
+    <string name="usingtime_radio_15">15分钟</string>
+    <string name="usingtime_radio_20">20分钟</string>
+    <string name="usingtime_radio_30">30分钟</string>
+    <string name="usingtime_radio_45">45分钟</string>
+    <string name="waiting">休息一下</string>
+</resources>

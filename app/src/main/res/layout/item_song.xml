@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <ImageView
+        android:id="@+id/song_thumb_img"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:scaleType="centerInside"
+        android:layout_margin="5dp"/>
+
+    <FrameLayout
+        android:id="@+id/song_controlbutton_fl"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_margin="10dp"
+        android:layout_alignParentRight="true">
+        <ImageView
+            android:id="@+id/song_like_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/likeicon_selector"/>
+
+        <ImageView
+            android:id="@+id/song_delete_img"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/delete"
+            android:visibility="gone"/>
+    </FrameLayout>
+
+    <TextView
+        android:id="@+id/song_name_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:text="ddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd"
+        android:background="@color/hint"
+        android:textColor="@android:color/white"
+        android:gravity="center_vertical"
+        android:paddingLeft="20dp"
+        android:paddingBottom="20dp" />
+
+</RelativeLayout>
