@@ -70,7 +70,7 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
             switch (msg.what) {
                 case UPDATE_TEXTVIEW:
                     updateTextView();
-                    mSeekBar.setProgress(mediaPlayerHelper.getCurrentPosition());
+//                    mSeekBar.setProgress(mediaPlayerHelper.getCurrentPosition());
                     updateSongPlayNumber();
 
                     break;
@@ -118,6 +118,9 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
                 break;
             }
         }
+        mediaPlayerHelper = new MediaPlayerHelper(mVideopath);
+        mediaPlayerHelper.setOnMediaPlayerActionListener(PlayActivity.this);
+        mediaPlayerHelper.initMediaPlayer();
     }
 
     private void initView()
@@ -184,13 +187,13 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
+        Log.d("mediahelp","onSurfaceCreated");
         int textid = 0;
         try {
             textid = glRender.createOnGlThread(this);
             mSurfaceTexture = new SurfaceTexture(textid);//构建用于预览的surfaceTexture
             mSurfaceTexture.setOnFrameAvailableListener(PlayActivity.this);
-            mediaPlayerHelper = new MediaPlayerHelper(mVideopath,mSurfaceTexture);
-            mediaPlayerHelper.setOnMediaPlayerActionListener(PlayActivity.this);
+            mediaPlayerHelper.setSurface(mSurfaceTexture);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -200,7 +203,8 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
-        mediaPlayerHelper.initMediaPlayer();
+        Log.d("mediahelp","onSurfaceChanged");
+        mediaPlayerHelper.play();
         mediaPlayerHelper.onVideoSizeChanged(width, height, new MediaPlayerHelper.OnGetVideoInfoListener() {
             @Override
             public void onGetVideoSizeChanged(int videowidth, int videoheight) {
@@ -243,7 +247,7 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
             mSurfaceTexture.release();
             mSurfaceTexture = null;
         }
-
+        Log.d("mediahelp","onDestroy");
         if(mediaPlayerHelper != null)
             mediaPlayerHelper.destory();
         if (mTimer != null) {
@@ -377,6 +381,7 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
+        Log.d("mediahelp","onProgressChanged");
         if(null != mediaPlayerHelper)
             mVideotimeTv.setText(mediaPlayerHelper.getCurrentVideoTimeString());
     }
@@ -414,14 +419,14 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
         mLastbtn.setClickable(true);
         mNextbtn.setClickable(true);
         mLikekbtn.setSelected(mAllSongs.get(mVideoIndex).getIs_like());
-        Log.d("mediahelp","pause onMediaPlayerStart");
+        Log.d("mediahelp","onMediaPlayerStart");
     }
 
     @Override
     public void onMediaPlayerPause() {
         stopTimer();
         mCount = -1;
-        Log.d("mediahelp","pause onMediaPlayerPause");
+        Log.d("mediahelp","onMediaPlayerPause");
     }
 
     @Override
@@ -438,6 +443,7 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
     private void startTimer()
     {
+        stopTimer();
         if (mTimer == null) {
             mTimer = new Timer();
         }
@@ -478,9 +484,9 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
         if(mCount <= TOTAL_COUNT)
         {
             mCount++;
-
+            Log.d("mediahelp","updateTextView");
             mSeekBar.setProgress(mediaPlayerHelper.getCurrentPosition());
-            mVideotimeTv.setText(mediaPlayerHelper.getCurrentVideoTimeString());
+//            mVideotimeTv.setText(mediaPlayerHelper.getCurrentVideoTimeString());
         }
         else
         {

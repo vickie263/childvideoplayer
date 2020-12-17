@@ -26,30 +26,43 @@ public class MediaPlayerHelper {
     private int mCurrentPos = 0;
 
 
-    public MediaPlayerHelper(String videoPath, SurfaceTexture surfaceTexture){
-        mSurface = new Surface(surfaceTexture);
+    public MediaPlayerHelper(String videoPath){
         if(null != videoPath && !videoPath.isEmpty())
         this.videoPath = videoPath;
     }
 
-    public boolean initMediaPlayer() {
+    public boolean initMediaPlayer()
+    {
         if(null != mediaPlayer)
             return false;
         mediaPlayer = new MediaPlayer();
+        mediaPlayer.reset();
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         try {
-            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(videoPath);
-            mediaPlayer.setSurface(mSurface);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
+        }
+        return true;
+    }
 
+    public boolean play() {
+
+        try {
+            Log.d("mediahelp","play");
+            mediaPlayer.setSurface(mSurface);
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
                 public void onPrepared(MediaPlayer mp) {
                     try {
                         if (mp != null) {
-                            mp.start(); //视频开始播放了
-                            if(null != mOnMediaPlayerActionListener)
-                                mOnMediaPlayerActionListener.onMediaPlayerStart(0,mediaPlayer.getDuration());
+                            Log.d("mediahelp","onPrepared");
+                            mp.seekTo(mCurrentPos);
+//                            mp.start(); //视频开始播放了
+//                            if(null != mOnMediaPlayerActionListener)
+//                                mOnMediaPlayerActionListener.onMediaPlayerStart(0,mediaPlayer.getDuration());
                         }
                     } catch (IllegalStateException e) {
                         e.printStackTrace();
@@ -60,7 +73,10 @@ public class MediaPlayerHelper {
                 @Override
                 public void onSeekComplete(MediaPlayer mediaPlayer) {
                     Log.d("mediahelp","onSeekComplete mCurrentPos="+mCurrentPos);
-                    mediaPlayer.start();
+                    if(!mediaPlayer.isPlaying())
+                    {
+                        mediaPlayer.start();
+                    }
                     if(null != mOnMediaPlayerActionListener)
                         mOnMediaPlayerActionListener.onMediaPlayerStart(mCurrentPos,mediaPlayer.getDuration());
                 }
@@ -71,6 +87,13 @@ public class MediaPlayerHelper {
                     Log.d("mediahelp","onCompletion");
                     if(null != mOnMediaPlayerActionListener)
                         mOnMediaPlayerActionListener.onMediaPlayerComplation();
+                }
+            });
+            mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
+                @Override
+                public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
+                    Log.d("mediahelp","onError what = "+i+" value = "+i1);
+                    return true;
                 }
             });
             mediaPlayer.setLooping(false);
@@ -86,12 +109,16 @@ public class MediaPlayerHelper {
             // TODO Auto-generated catch block
             e1.printStackTrace();
             return false;
-        } catch (IOException e1) {
-            // TODO Auto-generated catch block
-            e1.printStackTrace();
-            return false;
         }
         return true;
+    }
+
+    public void setSurface(SurfaceTexture surfaceTexture)
+    {
+        if(null != mediaPlayer)
+        {
+            mSurface = new Surface(surfaceTexture);
+        }
     }
 
     public void setOnMediaPlayerActionListener(OnMediaPlayerActionListener l)
@@ -105,8 +132,13 @@ public class MediaPlayerHelper {
         if(null == videoPath || videoPath.isEmpty())
             return false;
         destory();
+        mCurrentPos = 0;
         this.videoPath = videoPath;
-        return initMediaPlayer();
+        Log.d("mediahelp","playNextItem");
+        boolean result = initMediaPlayer();
+        if(!result)
+            return false;
+        return play();
     }
 
     public void seekTo(int progress)
@@ -128,21 +160,26 @@ public class MediaPlayerHelper {
             return "";
         if(null == durationstr)
         {
+            Log.d("mediahelp","getCurrentVideoTimeString1");
             int duration = mediaPlayer.getDuration() / 1000;//获取音乐总时长
             durationstr = calculateTime(duration);
         }
+
         int position = mediaPlayer.getCurrentPosition();//获取当前播放的位置
         String time = calculateTime(position / 1000) + " / " + durationstr;
+        Log.d("mediahelp","getCurrentVideoTimeString2 position = "+position);
         return time;
     }
 
     public void destory()
     {
         if (mediaPlayer != null) {
+            Log.d("mediahelp","mediaplayerhelper.destory");
             if(mediaPlayer.isPlaying())
                 mediaPlayer.stop();
             mediaPlayer.release();
             mediaPlayer =null;
+            durationstr = null;
         }
         if(null != mOnMediaPlayerActionListener)
             mOnMediaPlayerActionListener.onMediaPlayerDestroy();
@@ -173,6 +210,10 @@ public class MediaPlayerHelper {
                     mediaPlayer.seekTo(mCurrentPos);
             }
             Log.d("mediahelp","resume mCurrentPos="+mCurrentPos);
+        }else
+        {
+            initMediaPlayer();
+            play();
         }
     }
 
