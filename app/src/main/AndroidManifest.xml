@@ -18,7 +18,8 @@
         <activity android:name="com.example.super_simple_song.SettingActivity" />
         <activity
             android:name="com.example.super_simple_song.Play.PlayActivity"
-            android:screenOrientation="landscape" />
+            android:screenOrientation="landscape"
+            android:configChanges="orientation|screenSize"/>
         <activity android:name="com.example.super_simple_song.LikeListActivity" />
         <activity android:name="com.example.super_simple_song.MainActivity">
             <intent-filter>

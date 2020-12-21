@@ -9,7 +9,6 @@ import android.opengl.GLSurfaceView;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -187,7 +186,6 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
     @Override
     public void onSurfaceCreated(GL10 gl10, EGLConfig eglConfig) {
         GLES20.glClearColor(0.1f, 0.1f, 0.1f, 1.0f);
-        Log.d("mediahelp","onSurfaceCreated");
         int textid = 0;
         try {
             textid = glRender.createOnGlThread(this);
@@ -203,15 +201,18 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
     @Override
     public void onSurfaceChanged(GL10 gl10, int width, int height) {
         GLES20.glViewport(0, 0, width, height);
-        Log.d("mediahelp","onSurfaceChanged");
         mediaPlayerHelper.play();
-        mediaPlayerHelper.onVideoSizeChanged(width, height, new MediaPlayerHelper.OnGetVideoInfoListener() {
-            @Override
-            public void onGetVideoSizeChanged(int videowidth, int videoheight) {
-                glRender.computeMatrix(videowidth / (float)videoheight,
-                        width / (float)height);
-            }
-        });
+        if(mediaPlayerHelper.mVideoWidth > 0 && mediaPlayerHelper.mVideoHeight > 0)
+            glRender.computeMatrix(mediaPlayerHelper.mVideoWidth / (float)mediaPlayerHelper.mVideoHeight,
+                    width / (float)height);
+        else
+            mediaPlayerHelper.onVideoSizeChanged(width, height, new MediaPlayerHelper.OnGetVideoInfoListener() {
+                @Override
+                public void onGetVideoSizeChanged(int videowidth, int videoheight) {
+                    glRender.computeMatrix(videowidth / (float)videoheight,
+                            width / (float)height);
+                }
+            });
     }
 
     @Override
@@ -247,7 +248,6 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
             mSurfaceTexture.release();
             mSurfaceTexture = null;
         }
-        Log.d("mediahelp","onDestroy");
         if(mediaPlayerHelper != null)
             mediaPlayerHelper.destory();
         if (mTimer != null) {
@@ -381,7 +381,6 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int i, boolean b) {
-        Log.d("mediahelp","onProgressChanged");
         if(null != mediaPlayerHelper)
             mVideotimeTv.setText(mediaPlayerHelper.getCurrentVideoTimeString());
     }
@@ -419,14 +418,12 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
         mLastbtn.setClickable(true);
         mNextbtn.setClickable(true);
         mLikekbtn.setSelected(mAllSongs.get(mVideoIndex).getIs_like());
-        Log.d("mediahelp","onMediaPlayerStart");
     }
 
     @Override
     public void onMediaPlayerPause() {
         stopTimer();
         mCount = -1;
-        Log.d("mediahelp","onMediaPlayerPause");
     }
 
     @Override
@@ -470,7 +467,7 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
     {
         if(hasUpdateNumber)
             return;
-        if(mediaPlayerHelper.getCurrentPosition() > (mSeekBar.getMax() * 0.75))
+        if(mediaPlayerHelper.getCurrentPosition() > (mSeekBar.getMax() * 0.5))
         {
             Song song = mAllSongs.get(mVideoIndex);
             song.setNumber(song.getNumber()+1);
@@ -484,9 +481,7 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
         if(mCount <= TOTAL_COUNT)
         {
             mCount++;
-            Log.d("mediahelp","updateTextView");
             mSeekBar.setProgress(mediaPlayerHelper.getCurrentPosition());
-//            mVideotimeTv.setText(mediaPlayerHelper.getCurrentVideoTimeString());
         }
         else
         {

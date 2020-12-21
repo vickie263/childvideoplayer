@@ -1,6 +1,7 @@
 package com.example.super_simple_song;
 
 import android.content.Intent;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
@@ -61,6 +62,7 @@ public class MainPagePresenterImp implements SongsContactor.IPresenter {
         {
             if(TimeModel.getInstance().bHasInterval(SongsApp.getAppContext()))
             {
+                Log.d("mediahelp","beginTimer WaitingActivity");
                 TimeModel.getInstance().beginTimer(SongsApp.getAppContext(),WaitingActivity.class);
             }
         }

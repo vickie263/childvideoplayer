@@ -1,20 +1,13 @@
 package com.example.super_simple_song.Play;
 
-import android.Manifest;
-import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.os.Build;
 import android.os.Environment;
-import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.Display;
 import android.view.Surface;
-import android.view.WindowManager;
-
 import java.io.IOException;
-import java.util.Timer;
+
 
 public class MediaPlayerHelper {
     public String videoPath = Environment.getExternalStorageDirectory().getPath()+"/cc_long_tate_1021.mp4";
@@ -24,6 +17,7 @@ public class MediaPlayerHelper {
     private OnMediaPlayerActionListener mOnMediaPlayerActionListener;
     private String durationstr = null;
     private int mCurrentPos = 0;
+    public int mVideoWidth = 0, mVideoHeight = 0;
 
 
     public MediaPlayerHelper(String videoPath){
@@ -35,6 +29,7 @@ public class MediaPlayerHelper {
     {
         if(null != mediaPlayer)
             return false;
+
         mediaPlayer = new MediaPlayer();
         mediaPlayer.reset();
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
@@ -50,7 +45,6 @@ public class MediaPlayerHelper {
     public boolean play() {
 
         try {
-            Log.d("mediahelp","play");
             mediaPlayer.setSurface(mSurface);
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -58,7 +52,6 @@ public class MediaPlayerHelper {
                 public void onPrepared(MediaPlayer mp) {
                     try {
                         if (mp != null) {
-                            Log.d("mediahelp","onPrepared");
                             mp.seekTo(mCurrentPos);
 //                            mp.start(); //视频开始播放了
 //                            if(null != mOnMediaPlayerActionListener)
@@ -72,7 +65,6 @@ public class MediaPlayerHelper {
             mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
                 @Override
                 public void onSeekComplete(MediaPlayer mediaPlayer) {
-                    Log.d("mediahelp","onSeekComplete mCurrentPos="+mCurrentPos);
                     if(!mediaPlayer.isPlaying())
                     {
                         mediaPlayer.start();
@@ -84,7 +76,6 @@ public class MediaPlayerHelper {
             mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
                 @Override
                 public void onCompletion(MediaPlayer mediaPlayer) {
-                    Log.d("mediahelp","onCompletion");
                     if(null != mOnMediaPlayerActionListener)
                         mOnMediaPlayerActionListener.onMediaPlayerComplation();
                 }
@@ -92,7 +83,6 @@ public class MediaPlayerHelper {
             mediaPlayer.setOnErrorListener(new MediaPlayer.OnErrorListener() {
                 @Override
                 public boolean onError(MediaPlayer mediaPlayer, int i, int i1) {
-                    Log.d("mediahelp","onError what = "+i+" value = "+i1);
                     return true;
                 }
             });
@@ -133,8 +123,9 @@ public class MediaPlayerHelper {
             return false;
         destory();
         mCurrentPos = 0;
+        mVideoWidth = 0;
+        mVideoHeight = 0;
         this.videoPath = videoPath;
-        Log.d("mediahelp","playNextItem");
         boolean result = initMediaPlayer();
         if(!result)
             return false;
@@ -160,21 +151,19 @@ public class MediaPlayerHelper {
             return "";
         if(null == durationstr)
         {
-            Log.d("mediahelp","getCurrentVideoTimeString1");
             int duration = mediaPlayer.getDuration() / 1000;//获取音乐总时长
             durationstr = calculateTime(duration);
         }
 
         int position = mediaPlayer.getCurrentPosition();//获取当前播放的位置
         String time = calculateTime(position / 1000) + " / " + durationstr;
-        Log.d("mediahelp","getCurrentVideoTimeString2 position = "+position);
+//        Log.d("mediahelp","getCurrentVideoTimeString2 position = "+position);
         return time;
     }
 
     public void destory()
     {
         if (mediaPlayer != null) {
-            Log.d("mediahelp","mediaplayerhelper.destory");
             if(mediaPlayer.isPlaying())
                 mediaPlayer.stop();
             mediaPlayer.release();
@@ -187,7 +176,6 @@ public class MediaPlayerHelper {
 
     public void pause()
     {
-        Log.d("mediahelp","mediaplayerhelper.pause mCurrentPos="+mediaPlayer.getCurrentPosition());
         if(null != mediaPlayer && mediaPlayer.isPlaying())
         {
             mediaPlayer.pause();
@@ -209,7 +197,6 @@ public class MediaPlayerHelper {
                 else
                     mediaPlayer.seekTo(mCurrentPos);
             }
-            Log.d("mediahelp","resume mCurrentPos="+mCurrentPos);
         }else
         {
             initMediaPlayer();
@@ -221,7 +208,6 @@ public class MediaPlayerHelper {
     {
         if(null != mediaPlayer)
             return mediaPlayer.isPlaying();
-        Log.d("mediahelp","mediaplayerhelper.isPlaying");
         return false;
     }
 
@@ -230,10 +216,10 @@ public class MediaPlayerHelper {
         mediaPlayer.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
             @Override
             public void onVideoSizeChanged(MediaPlayer mediaPlayer, int i, int i1) {
-                int videoWidth = i;
-                int videoHeight = i1;
+                mVideoWidth = i;
+                mVideoHeight = i1;
                 if (screenWidth > 0 && screenHeight > 0 && null != listener) {
-                    listener.onGetVideoSizeChanged(videoWidth,videoHeight);
+                    listener.onGetVideoSizeChanged(mVideoWidth,mVideoHeight);
                 }
             }
         });

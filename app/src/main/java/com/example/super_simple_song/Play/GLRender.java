@@ -256,9 +256,9 @@ private final float[] vertexData = {
     public void computeMatrix(float videoRatio, float screenRatio) {
         Matrix.setIdentityM(modelMatrix, 0);
         if (videoRatio > screenRatio) {
-            Matrix.scaleM(modelMatrix, 0, 1F, 1 - ((videoRatio - screenRatio) / 1), 1F);
+            Matrix.scaleM(modelMatrix, 0, 1F, screenRatio / videoRatio, 1F);
         } else if (videoRatio < screenRatio) {
-            Matrix.scaleM(modelMatrix, 0, 1 - ((screenRatio - videoRatio) / 1), 1F, 1F);
+            Matrix.scaleM(modelMatrix, 0, videoRatio / screenRatio, 1F, 1F);
         }
     }
 
