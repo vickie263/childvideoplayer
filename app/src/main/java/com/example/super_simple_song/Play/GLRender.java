@@ -36,24 +36,8 @@ public class GLRender{
     private float specular = 1.0f;
     private float specularPower = 6.0f;
 
-    private int textureId = -1;
-    private SurfaceTexture surfaceTexture;
-    private MediaPlayer mediaPlayer;
-    private Context context;
-    private int aPositionHandle;
     // Shader location: model view projection matrix.
     private int modelViewUniform;
-    private int modelViewProjectionUniform;
-    // Shader location: environment properties.
-    private int lightingParametersUniform;
-
-    // Shader location: material properties.
-    private int materialParametersUniform;
-    // Shader location: color correction property
-    private int colorCorrectionParameterUniform;
-
-    // Shader location: color tinting
-    private int colorTintParameterUniform;
     // Shader location: texture sampler.
     private int textureUniform;
     // Shader location: SurfaceTexture.getTransformMatrix.
@@ -66,11 +50,6 @@ public class GLRender{
 
     // Temporary matrices allocated here to reduce number of allocations for each frame.
     private final float[] modelMatrix = new float[16];
-    private final float[] modelViewMatrix = new float[16];
-    private final float[] modelViewProjectionMatrix = new float[16];
-    private final float[] viewLightDirection = new float[4];
-    // Note: the last component must be zero to avoid applying the translational part of the matrix.
-    private static final float[] LIGHT_DIRECTION = new float[] {0.250f, 0.866f, 0.433f, 0.0f};
     private final int[] textures = new int[1];
     private int vertexBufferId;
     private int indexBufferId;
@@ -81,16 +60,7 @@ public class GLRender{
     private int texCoordAttribute;
     private int verticesBaseAddress;
     private int texCoordsBaseAddress;
-    private int indexCount;
-//    private Context mContext;
 
-//    private final float[] vertexData = {
-//            // positions
-//            0.5f,  0.5f, 0.0f,
-//            0.5f, -0.5f, 0.0f,
-//            -0.5f, -0.5f, 0.0f,
-//            -0.5f,  0.5f, 0.0f,
-//    };
 private final float[] vertexData = {
         // positions
         -1.0f, 1.0f, 0.0f,  // top left
@@ -149,7 +119,7 @@ private final float[] vertexData = {
                 .asShortBuffer()
                 .put(indexData);
         indexBuffer.position(0);
-        indexCount = indexBuffer.limit();
+
         //将顶点数据绑定到vertexBufferId上
         int[] buffers = new int[2];
         GLES20.glGenBuffers(2, buffers, 0);
@@ -268,23 +238,6 @@ private final float[] vertexData = {
         float green = ((colorHex & 0x00FF00) >> 8) / 255.0f * TINT_INTENSITY;
         float blue = (colorHex & 0x0000FF) / 255.0f * TINT_INTENSITY;
         return new float[] {red, green, blue, TINT_ALPHA};
-    }
-
-    /**
-     * Sets the surface characteristics of the rendered model.
-     *
-     * @param ambient Intensity of non-directional surface illumination.
-     * @param diffuse Diffuse (matte) surface reflectivity.
-     * @param specular Specular (shiny) surface reflectivity.
-     * @param specularPower Surface shininess. Larger values result in a smaller, sharper specular
-     *     highlight.
-     */
-    public void setMaterialProperties(
-            float ambient, float diffuse, float specular, float specularPower) {
-        this.ambient = ambient;
-        this.diffuse = diffuse;
-        this.specular = specular;
-        this.specularPower = specularPower;
     }
 
 }

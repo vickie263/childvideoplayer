@@ -18,8 +18,8 @@
 
         <ImageView
             android:id="@+id/pausebtn"
-            android:layout_width="60dp"
-            android:layout_height="60dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:src="@drawable/playicon_selector"
             android:layout_centerInParent="true"/>
 

@@ -69,7 +69,6 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
             switch (msg.what) {
                 case UPDATE_TEXTVIEW:
                     updateTextView();
-//                    mSeekBar.setProgress(mediaPlayerHelper.getCurrentPosition());
                     updateSongPlayNumber();
 
                     break;
