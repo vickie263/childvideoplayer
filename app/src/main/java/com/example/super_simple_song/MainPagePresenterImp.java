@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class MainPagePresenterImp implements SongsContactor.IPresenter {
-    public static final String FOLDERNAME = "/sss";
+    public static final String FOLDERNAME = "";//"/sss";
     private SongsContactor.IView mainpageView;
     private List<Song> mAllSongs = null;
 
@@ -90,6 +90,7 @@ public class MainPagePresenterImp implements SongsContactor.IPresenter {
                 Song song = new Song();
                 song.setName(fileslist.get(i));
                 song.setDuration("0s");
+                song.setIs_valid(true);
                 List<Song> songs = SongDataBaseHelper.getInstance().songDataBase.getSongDao().getSongByName(song.getName());
                 if(songs.size() == 0)
                 {

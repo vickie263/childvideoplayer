@@ -118,7 +118,31 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
         }
         mediaPlayerHelper = new MediaPlayerHelper(mVideopath);
         mediaPlayerHelper.setOnMediaPlayerActionListener(PlayActivity.this);
-        mediaPlayerHelper.initMediaPlayer();
+        int result = mediaPlayerHelper.initMediaPlayer();
+        if(mediaPlayerHelper.RESULT_IOEXCEPTION == result)
+        {
+            dealwithErrorVideo();
+            playNextVideo();
+        }
+    }
+
+    private void dealwithErrorVideo()
+    {
+        Toast.makeText(PlayActivity.this,getString(R.string.error_playvideo),Toast.LENGTH_SHORT).show();
+        Song song = mAllSongs.get(mVideoIndex);
+        song.setIs_valid(false);
+        mAllSongs.remove(mVideoIndex);
+        if(mAllSongs.size() <= 0)
+        {
+            Toast.makeText(PlayActivity.this,getString(R.string.playpage_novideo),Toast.LENGTH_SHORT).show();
+            goBack();
+        }
+        if(mVideoIndex != 0)
+            mVideoIndex--;
+        else
+            mVideoIndex = mAllSongs.size() - 1;
+        SongDataBaseHelper.getInstance().songDataBase.getSongDao().update(song);
+
     }
 
     private void initView()
@@ -333,11 +357,18 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
         if(index >= mAllSongs.size())
             index = mAllSongs.size() - 1;
         mVideoIndex = index;
-        boolean result = mediaPlayerHelper.playNextItem(mAllSongs.get(index).getName());
-        if(!result)
+        int result = mediaPlayerHelper.playNextItem(mAllSongs.get(index).getName());
+        if(result != mediaPlayerHelper.RESULT_SUCCESS)
         {
-            mLastbtn.setClickable(true);
-            mNextbtn.setClickable(true);
+            if(result == mediaPlayerHelper.RESULT_IOEXCEPTION)
+            {
+                dealwithErrorVideo();
+                playNextVideo();
+            }else
+            {
+                mLastbtn.setClickable(true);
+                mNextbtn.setClickable(true);
+            }
         }else
         {
             hasUpdateNumber = false;
@@ -352,11 +383,19 @@ public class PlayActivity extends AppCompatActivity implements GLSurfaceView.Ren
         if(index >= mAllSongs.size())
             index = 0;
         mVideoIndex = index;
-        boolean result = mediaPlayerHelper.playNextItem(mAllSongs.get(index).getName());
-        if(!result)
+        int result = mediaPlayerHelper.playNextItem(mAllSongs.get(index).getName());
+        if(result != mediaPlayerHelper.RESULT_SUCCESS)
         {
-            mLastbtn.setClickable(true);
-            mNextbtn.setClickable(true);
+            if(result == mediaPlayerHelper.RESULT_IOEXCEPTION)
+            {
+                dealwithErrorVideo();
+                playNextVideo();
+            }
+            else
+            {
+                mLastbtn.setClickable(true);
+                mNextbtn.setClickable(true);
+            }
         }else
         {
             hasUpdateNumber = false;

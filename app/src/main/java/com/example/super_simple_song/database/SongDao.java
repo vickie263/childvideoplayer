@@ -28,9 +28,9 @@ public interface  SongDao {
     @Query("SELECT * FROM Song WHERE file_name = :name")
     List<Song> getSongByName(String name);
 
-    @Query("SELECT * FROM Song ORDER BY play_number desc")
+    @Query("SELECT * FROM Song WHERE is_valid = '1' ORDER BY play_number desc")
     List<Song> getAllSongsOrderbyPlaynumberDesc();
 
-    @Query("SELECT * FROM Song WHERE is_like = '1' ORDER BY play_number desc")
+    @Query("SELECT * FROM Song WHERE is_like = '1' AND is_valid = '1' ORDER BY play_number desc")
     List<Song> getLikeSongsOrderbyPlaynumberDesc();
 }

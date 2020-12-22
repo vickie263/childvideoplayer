@@ -16,4 +16,5 @@
     <string name="usingtime_radio_30">30分钟</string>
     <string name="usingtime_radio_45">45分钟</string>
     <string name="waiting">休息一下</string>
+    <string name="error_playvideo">视频存在问题，从视频列表里移出去啦！正在播放下一首</string>
 </resources>

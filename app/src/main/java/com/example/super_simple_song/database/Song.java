@@ -19,6 +19,8 @@ public class Song {
     private boolean is_like;
     @ColumnInfo(name = "play_number")
     private int number;
+    @ColumnInfo(name = "is_valid")
+    private boolean is_valid;
 
     public int getId() {
         return id;
@@ -59,4 +61,13 @@ public class Song {
     public void setNumber(int number) {
         this.number = number;
     }
+
+    public boolean getIs_valid() {
+        return is_valid;
+    }
+
+    public void setIs_valid(boolean isvalid) {
+        this.is_valid = isvalid;
+    }
+
 }

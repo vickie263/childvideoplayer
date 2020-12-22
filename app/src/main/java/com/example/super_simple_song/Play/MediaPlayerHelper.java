@@ -10,8 +10,11 @@ import java.io.IOException;
 
 
 public class MediaPlayerHelper {
-    public String videoPath = Environment.getExternalStorageDirectory().getPath()+"/cc_long_tate_1021.mp4";
-
+    public final int RESULT_SUCCESS = 0;
+    public final int RESULT_IOEXCEPTION = 1;
+    public final int RESULT_UNDO = 2;
+    public final int RESULT_ILLSTATE = 3;
+    public String videoPath;
     private Surface mSurface;
     private MediaPlayer mediaPlayer;
     private OnMediaPlayerActionListener mOnMediaPlayerActionListener;
@@ -25,10 +28,10 @@ public class MediaPlayerHelper {
         this.videoPath = videoPath;
     }
 
-    public boolean initMediaPlayer()
+    public int initMediaPlayer()
     {
         if(null != mediaPlayer)
-            return false;
+            return RESULT_UNDO;
 
         mediaPlayer = new MediaPlayer();
         mediaPlayer.reset();
@@ -37,12 +40,12 @@ public class MediaPlayerHelper {
             mediaPlayer.setDataSource(videoPath);
         } catch (IOException e) {
             e.printStackTrace();
-            return false;
+            return RESULT_IOEXCEPTION;
         }
-        return true;
+        return RESULT_SUCCESS;
     }
 
-    public boolean play() {
+    public int play() {
 
         try {
             mediaPlayer.setSurface(mSurface);
@@ -90,17 +93,17 @@ public class MediaPlayerHelper {
         } catch (IllegalArgumentException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
-            return false;
+            return RESULT_ILLSTATE;
         } catch (SecurityException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
-            return false;
+            return RESULT_ILLSTATE;
         } catch (IllegalStateException e1) {
             // TODO Auto-generated catch block
             e1.printStackTrace();
-            return false;
+            return RESULT_ILLSTATE;
         }
-        return true;
+        return RESULT_SUCCESS;
     }
 
     public void setSurface(SurfaceTexture surfaceTexture)
@@ -117,18 +120,18 @@ public class MediaPlayerHelper {
             mOnMediaPlayerActionListener = l;
     }
 
-    public boolean playNextItem(String videoPath)
+    public int playNextItem(String videoPath)
     {
         if(null == videoPath || videoPath.isEmpty())
-            return false;
+            return RESULT_UNDO;
         destory();
         mCurrentPos = 0;
         mVideoWidth = 0;
         mVideoHeight = 0;
         this.videoPath = videoPath;
-        boolean result = initMediaPlayer();
-        if(!result)
-            return false;
+        int result = initMediaPlayer();
+        if(result != RESULT_SUCCESS)
+            return result;
         return play();
     }
 
