@@ -22,6 +22,15 @@ android {
         }
     }
 
+    signingConfigs {
+        myrelease {
+            keyAlias System.properties['keyAlias']
+            keyPassword System.properties['keyPassword']
+            storeFile file(System.properties['storeFile'])
+            storePassword System.properties['storePassword']
+        }
+    }
+
     buildTypes {
         release {
             minifyEnabled false
