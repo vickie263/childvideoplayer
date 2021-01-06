@@ -13,13 +13,22 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.example.super_simple_song.WaitingActivity"
-            android:screenOrientation="landscape"/>
+        <activity android:name="com.example.super_simple_song.BaseActivity"></activity>
+        <activity android:name="com.example.super_simple_song.Play.AudioPlayActivity" />
+
+        <service
+            android:name="com.example.super_simple_song.Play.PlayService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name="com.example.super_simple_song.WaitingActivity"
+            android:screenOrientation="landscape" />
         <activity android:name="com.example.super_simple_song.SettingActivity" />
         <activity
-            android:name="com.example.super_simple_song.Play.PlayActivity"
-            android:screenOrientation="landscape"
-            android:configChanges="orientation|screenSize"/>
+            android:name="com.example.super_simple_song.Play.VideoPlayActivity"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="landscape" />
         <activity android:name="com.example.super_simple_song.LikeListActivity" />
         <activity android:name="com.example.super_simple_song.MainActivity">
             <intent-filter>

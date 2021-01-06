@@ -14,6 +14,7 @@ public class MediaPlayerHelper {
     public final int RESULT_IOEXCEPTION = 1;
     public final int RESULT_UNDO = 2;
     public final int RESULT_ILLSTATE = 3;
+
     public String videoPath;
     private Surface mSurface;
     private MediaPlayer mediaPlayer;
@@ -26,6 +27,14 @@ public class MediaPlayerHelper {
     public MediaPlayerHelper(String videoPath){
         if(null != videoPath && !videoPath.isEmpty())
         this.videoPath = videoPath;
+    }
+
+    public MediaPlayerHelper(){}
+
+    public void setVideoPath(String videoPath)
+    {
+        if(null != videoPath && !videoPath.isEmpty())
+            this.videoPath = videoPath;
     }
 
     public int initMediaPlayer()
@@ -48,7 +57,8 @@ public class MediaPlayerHelper {
     public int play() {
 
         try {
-            mediaPlayer.setSurface(mSurface);
+            if(null != mSurface)
+                mediaPlayer.setSurface(mSurface);
             mediaPlayer.prepareAsync();
             mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
                 @Override
@@ -145,6 +155,13 @@ public class MediaPlayerHelper {
     {
         if(null != mediaPlayer)
             return mediaPlayer.getCurrentPosition();
+        return 0;
+    }
+
+    public int getTotalDuration()
+    {
+        if(null != mediaPlayer)
+            return mediaPlayer.getDuration();
         return 0;
     }
 

@@ -10,6 +10,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
+import com.example.super_simple_song.tools.PreferenceUtil;
 
 public class SettingActivity extends AppCompatActivity implements View.OnClickListener,
         RadioGroup.OnCheckedChangeListener {
@@ -45,6 +46,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         rb20.setChecked(interval == TimeModel.INTERVAL_20 ? true:false);
         rb30.setChecked(interval == TimeModel.INTERVAL_30 ? true:false);
         rb45.setChecked(interval == TimeModel.INTERVAL_45 ? true:false);
+        rg = (RadioGroup)findViewById(R.id.playmode_rg);
+        rg.setOnCheckedChangeListener(SettingActivity.this);
+        RadioButton rb_vedio = (RadioButton)findViewById(R.id.rb_vedio);
+        RadioButton rb_audio = (RadioButton)findViewById(R.id.rb_audio);
+        int playmode = PreferenceUtil.getInt(SettingActivity.this,SongsConstants.FILE_SETTING,
+                SongsConstants.KEY_PLAYMODE, SongsConstants.VALUE_PLAYMODE_VEDIO);
+        rb_vedio.setChecked(playmode == SongsConstants.VALUE_PLAYMODE_VEDIO ? true:false);
+        rb_audio.setChecked(playmode == SongsConstants.VALUE_PLAYMODE_AUDIO ? true:false);
     }
 
     @Override
@@ -74,6 +83,15 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 break;
             case R.id.rb_45min:
                 TimeModel.getInstance().writeInterval(TimeModel.INTERVAL_45);
+                break;
+
+            case R.id.rb_vedio:
+                PreferenceUtil.putInt(SettingActivity.this,SongsConstants.FILE_SETTING,
+                        SongsConstants.KEY_PLAYMODE,SongsConstants.VALUE_PLAYMODE_VEDIO);
+                break;
+            case R.id.rb_audio:
+                PreferenceUtil.putInt(SettingActivity.this,SongsConstants.FILE_SETTING,
+                        SongsConstants.KEY_PLAYMODE,SongsConstants.VALUE_PLAYMODE_AUDIO);
                 break;
         }
     }

@@ -3,30 +3,33 @@ package com.example.super_simple_song;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Message;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.myapplication.R;
-import com.example.super_simple_song.Play.PlayActivity;
+import com.example.super_simple_song.Play.AudioPlayActivity;
+import com.example.super_simple_song.Play.PlayService;
+import com.example.super_simple_song.Play.VideoPlayActivity;
 import com.example.super_simple_song.database.Song;
+import com.example.super_simple_song.tools.PreferenceUtil;
 
 import java.util.List;
 
-import javax.xml.transform.Result;
-
-public class LikeListActivity extends AppCompatActivity implements SongsContactor.IView, View.OnClickListener {
+public class LikeListActivity extends BaseActivity implements SongsContactor.IView,
+        View.OnClickListener {
     private SongsContactor.IPresenter likepagePresenter;
     private RecyclerView mSongsListView;
     private SongsListAdapter mAdapter;
+
+    @Override
+    protected void onServiceConnected() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,7 +40,6 @@ public class LikeListActivity extends AppCompatActivity implements SongsContacto
         likepagePresenter = new LikePagePresenterImp();
         likepagePresenter.bindView(this);
         likepagePresenter.loadSongs();
-
         initTitle();
     }
 
@@ -52,6 +54,19 @@ public class LikeListActivity extends AppCompatActivity implements SongsContacto
     @Override
     public void requirePermissions() {
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        int playmode = PreferenceUtil.getInt(this,SongsConstants.FILE_SETTING,
+                SongsConstants.KEY_PLAYMODE,SongsConstants.VALUE_PLAYMODE_VEDIO);
+        if(playmode == SongsConstants.VALUE_PLAYMODE_AUDIO)
+        {
+            mHasPlayBar = true;
+            startService();
+            bindService();
+        }
     }
 
     @Override
@@ -102,18 +117,29 @@ public class LikeListActivity extends AppCompatActivity implements SongsContacto
     {
         if(null == song)
             return;
+        Intent intent;
+        int playmode = PreferenceUtil.getInt(LikeListActivity.this,SongsConstants.FILE_SETTING,
+                SongsConstants.KEY_PLAYMODE,SongsConstants.VALUE_PLAYMODE_VEDIO);
+        if(playmode == SongsConstants.VALUE_PLAYMODE_AUDIO)
+        {
+            intent=new Intent(LikeListActivity.this, AudioPlayActivity.class);
+            intent.putExtra(SongsConstants.SONG_ID, song.getId());
+            intent.putExtra(SongsConstants.FROM_WHERE, SongsConstants.FROM_MAIN);
+            startActivity(intent);
+            return;
+        }
         boolean isExpired = likepagePresenter.checkTimer();
         if(isExpired)
         {
-            Intent intent=new Intent(LikeListActivity.this, PlayActivity.class);
-            intent.putExtra(RouterConstants.SONG_ID, song.getId());
-            intent.putExtra(RouterConstants.FROM_WHERE,RouterConstants.FROM_LIKE);
+            intent=new Intent(LikeListActivity.this, VideoPlayActivity.class);
+            intent.putExtra(SongsConstants.SONG_ID, song.getId());
+            intent.putExtra(SongsConstants.FROM_WHERE, SongsConstants.FROM_LIKE);
             startActivity(intent);
         }
         else
         {
-            Intent intent=new Intent(LikeListActivity.this, WaitingActivity.class);
-            intent.putExtra(RouterConstants.FROM_ALARM,false);
+            intent=new Intent(LikeListActivity.this, WaitingActivity.class);
+            intent.putExtra(SongsConstants.FROM_ALARM,false);
             startActivity(intent);
         }
     }

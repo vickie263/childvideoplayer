@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/hint"
+    tools:context="com.example.super_simple_song.Play.AudioPlayActivity">
+
+    <ImageView
+        android:id="@+id/audio_image"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"/>
+
+    <TextView
+        android:id="@+id/audio_showname"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:gravity="center_horizontal"
+        android:layout_below="@id/audio_image"/>
+
+    <include
+        android:id="@+id/control_layout"
+        layout="@layout/layout_controller"
+        android:visibility="visible"/>
+</RelativeLayout>

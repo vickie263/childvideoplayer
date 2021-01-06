@@ -19,7 +19,7 @@ public class WaitingActivity extends AppCompatActivity {
     private void initData()
     {
         Intent intent = getIntent();
-        boolean isFromAlarm = intent.getBooleanExtra(RouterConstants.FROM_ALARM,false);
+        boolean isFromAlarm = intent.getBooleanExtra(SongsConstants.FROM_ALARM,false);
         if(isFromAlarm)
             TimeModel.getInstance().writeCurrentTime(WaitingActivity.this);
     }

@@ -59,4 +59,36 @@
             android:text="@string/usingtime_radio_45"/>
     </RadioGroup>
 
+    <TextView
+        android:id="@+id/playmode_tv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/playmode_text"
+        android:layout_below="@id/usingtime_rg"
+        android:textSize="16sp"
+        android:layout_marginLeft="20dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginBottom="10dp"/>
+    <RadioGroup
+        android:id="@+id/playmode_rg"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/playmode_tv"
+        android:layout_marginLeft="30dp"
+        android:layout_marginRight="20dp">
+        <RadioButton
+            android:id="@+id/rb_vedio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@string/playmode_vedio"/>
+        <RadioButton
+            android:id="@+id/rb_audio"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="16sp"
+            android:text="@string/playmode_audio"/>
+    </RadioGroup>
+
 </RelativeLayout>

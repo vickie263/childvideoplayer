@@ -1,6 +1,5 @@
 package com.example.super_simple_song;
 
-import android.app.Activity;
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -9,7 +8,6 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
-import com.example.super_simple_song.app.SongsApp;
 import com.example.super_simple_song.tools.PreferenceUtil;
 
 import java.text.DateFormat;
@@ -225,7 +223,7 @@ public class TimeModel {
             return;
         Log.d("timemodel","beginTimer2 interval = "+interval);
         Intent perIntent = new Intent(context, dstactivity);
-        perIntent.putExtra(RouterConstants.FROM_ALARM,true);
+        perIntent.putExtra(SongsConstants.FROM_ALARM,true);
         PendingIntent sender = PendingIntent.getActivity(context,0,
                 perIntent,PendingIntent.FLAG_ONE_SHOT);
         Calendar calendar=Calendar.getInstance();

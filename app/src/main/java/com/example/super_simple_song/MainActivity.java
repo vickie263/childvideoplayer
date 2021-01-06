@@ -12,20 +12,27 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.example.myapplication.R;
-import com.example.super_simple_song.Play.PlayActivity;
+import com.example.super_simple_song.Play.AudioPlayActivity;
+import com.example.super_simple_song.Play.PlayService;
+import com.example.super_simple_song.Play.VideoPlayActivity;
 import com.example.super_simple_song.database.Song;
+import com.example.super_simple_song.tools.PreferenceUtil;
 
 import java.util.List;
 
 import pub.devrel.easypermissions.EasyPermissions;
 
-public class MainActivity extends AppCompatActivity implements EasyPermissions.PermissionCallbacks,
+public class MainActivity extends BaseActivity implements EasyPermissions.PermissionCallbacks,
         SongsContactor.IView, View.OnClickListener{
     public static final int RC_STORAGE = 12;
 
     private SongsContactor.IPresenter mainpagePresenter;
     private RecyclerView mSongsListView;
     private SongsListAdapter mAdapter;
+
+    @Override
+    protected void onServiceConnected() {
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,6 +50,17 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     protected void onResume() {
         super.onResume();
         mainpagePresenter.updateSongs();
+        int playmode = PreferenceUtil.getInt(this,SongsConstants.FILE_SETTING,
+                SongsConstants.KEY_PLAYMODE,SongsConstants.VALUE_PLAYMODE_VEDIO);
+        if(playmode == SongsConstants.VALUE_PLAYMODE_AUDIO)
+        {
+            mHasPlayBar = true;
+            startService();
+            bindService();
+        }else
+        {
+            stopService();
+        }
     }
 
     private void initData()
@@ -59,7 +77,6 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         ImageView like = (ImageView) findViewById(R.id.mainpage_like_img);
         like.setOnClickListener(this);
     }
-
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
@@ -142,19 +159,30 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
     {
         if(null == song)
             return;
+        Intent intent;
+        int playmode = PreferenceUtil.getInt(MainActivity.this,SongsConstants.FILE_SETTING,
+                SongsConstants.KEY_PLAYMODE,SongsConstants.VALUE_PLAYMODE_VEDIO);
+        if(playmode == SongsConstants.VALUE_PLAYMODE_AUDIO)
+        {
+            intent=new Intent(MainActivity.this, AudioPlayActivity.class);
+            intent.putExtra(SongsConstants.SONG_ID, song.getId());
+            intent.putExtra(SongsConstants.FROM_WHERE, SongsConstants.FROM_MAIN);
+            startActivity(intent);
+            return;
+        }
 
         boolean isExpired = mainpagePresenter.checkTimer();
         if(isExpired)
         {
-            Intent intent=new Intent(MainActivity.this, PlayActivity.class);
-            intent.putExtra(RouterConstants.SONG_ID, song.getId());
-            intent.putExtra(RouterConstants.FROM_WHERE,RouterConstants.FROM_MAIN);
+            intent=new Intent(MainActivity.this, VideoPlayActivity.class);
+            intent.putExtra(SongsConstants.SONG_ID, song.getId());
+            intent.putExtra(SongsConstants.FROM_WHERE, SongsConstants.FROM_MAIN);
             startActivity(intent);
         }
         else
         {
-            Intent intent=new Intent(MainActivity.this, WaitingActivity.class);
-            intent.putExtra(RouterConstants.FROM_ALARM,false);
+            intent=new Intent(MainActivity.this, WaitingActivity.class);
+            intent.putExtra(SongsConstants.FROM_ALARM,false);
             startActivity(intent);
         }
     }
@@ -170,5 +198,4 @@ public class MainActivity extends AppCompatActivity implements EasyPermissions.P
         Intent intent=new Intent(MainActivity.this, SettingActivity.class);
         startActivity(intent);
     }
-
 }

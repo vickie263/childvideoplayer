@@ -10,6 +10,9 @@
     <string name="playpage_novideo">找不到视频啦！</string>
     <string name="settingpage_title">设置</string>
     <string name="usingtime_text">使用超过下列时间后，强制休息2个小时:</string>
+    <string name="playmode_text">看视频还是听音乐？</string>
+    <string name="playmode_audio">听音乐</string>
+    <string name="playmode_vedio">看视频</string>
     <string name="usingtime_radio_0">无限制</string>
     <string name="usingtime_radio_15">15分钟</string>
     <string name="usingtime_radio_20">20分钟</string>

@@ -10,81 +10,10 @@
         android:layout_height="fill_parent"
         android:layout_gravity="top"/>
 
-    <RelativeLayout
+    <include
         android:id="@+id/control_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:visibility="invisible">
-
-        <ImageView
-            android:id="@+id/pausebtn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:src="@drawable/playicon_selector"
-            android:layout_centerInParent="true"/>
-
-        <ImageView
-            android:id="@+id/backbtn"
-            android:layout_width="30dp"
-            android:layout_height="30dp"
-            android:layout_margin="15dp"
-            android:src="@drawable/back_white"
-            />
-
-        <ImageView
-            android:id="@+id/likebtn"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_margin="10dp"
-            android:layout_alignParentRight="true"
-            android:src="@drawable/likeicon_selector"
-            />
-
-        <RelativeLayout
-            android:id="@+id/controlBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_margin="30dp">
-            <TextView
-                android:id="@+id/lastbtn"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:background="@drawable/background_normal"
-                android:text="上一首"/>
-
-            <TextView
-                android:id="@+id/nextbtn"
-                android:layout_width="50dp"
-                android:layout_height="30dp"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:background="@drawable/background_normal"
-                android:text="下一首"/>
-
-            <SeekBar
-                android:id="@+id/seekbar"
-                android:layout_width="match_parent"
-                android:layout_height="30dp"
-                android:layout_toRightOf="@id/lastbtn"
-                android:layout_toLeftOf="@id/nextbtn"
-                android:thumb="@android:color/white"
-                android:progress="0"
-                android:progressDrawable="@drawable/seekbarbackground"/>
-        </RelativeLayout>
-        <TextView
-            android:id="@+id/videotime_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="30dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:textColor="@android:color/white"
-            android:layout_marginTop="10dp"
-            android:layout_marginBottom="10dp"/>
-    </RelativeLayout>
+        layout="@layout/layout_controller"
+        android:visibility="invisible"/>
 
     <View
         android:id="@+id/clickview"

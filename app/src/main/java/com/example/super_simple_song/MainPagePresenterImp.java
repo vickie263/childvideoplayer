@@ -1,11 +1,9 @@
 package com.example.super_simple_song;
 
-import android.content.Intent;
 import android.util.Log;
 import android.widget.Toast;
 
 import com.example.myapplication.R;
-import com.example.super_simple_song.Play.PlayActivity;
 import com.example.super_simple_song.app.SongsApp;
 import com.example.super_simple_song.database.Song;
 import com.example.super_simple_song.database.SongDataBaseHelper;

@@ -8,9 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
-import com.example.super_simple_song.Play.PlayActivity;
 import com.example.super_simple_song.TimeModel;
-import com.example.super_simple_song.WaitingActivity;
 
 public class SongsApp extends Application {
     private static Application mApplication;
