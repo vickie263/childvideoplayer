@@ -55,8 +55,7 @@ public class PlayService extends Service implements MediaPlayerHelper.OnMediaPla
         if(!isplaynew)
             return START_STICKY;
 
-        if(mediaPlayerHelper.isPlaying())
-            mediaPlayerHelper.destory();
+        mediaPlayerHelper.destory();
         int result = mPlayDataHelper.initSong(PlayService.this,intent);
         if(result == PlayDataHelper.RESULT_NO_SONGS)
         {

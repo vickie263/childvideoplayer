@@ -43,6 +43,7 @@ public class AudioPlayActivity extends BaseActivity implements View.OnClickListe
     protected void onServiceConnected() {
         play();
         updateSongData(mBinder.getService().getCurrentSong());
+        mPausebtn.setSelected(!mBinder.getService().isPlaying());
     }
 
     @Override
@@ -104,6 +105,7 @@ public class AudioPlayActivity extends BaseActivity implements View.OnClickListe
 
         File videoFile = new File(song.getName());
         Glide.with(AudioPlayActivity.this).load(Uri.fromFile(videoFile)).centerCrop().into(mImage);
+
     }
 
     private void play()

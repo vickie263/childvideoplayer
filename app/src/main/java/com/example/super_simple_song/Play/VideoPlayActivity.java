@@ -302,6 +302,7 @@ public class VideoPlayActivity extends AppCompatActivity implements GLSurfaceVie
             }
         }else
         {
+            surfaceView.onResume();
             hasUpdateNumber = false;
         }
     }
@@ -325,13 +326,14 @@ public class VideoPlayActivity extends AppCompatActivity implements GLSurfaceVie
             }
         }else
         {
+            surfaceView.onResume();
             hasUpdateNumber = false;
         }
     }
 
     private void resumePlay()
     {
-        surfaceView.requestRender();
+//        surfaceView.requestRender();
         surfaceView.onResume();
         if(mediaPlayerHelper != null)
             mediaPlayerHelper.resume();

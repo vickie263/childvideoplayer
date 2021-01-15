@@ -86,9 +86,8 @@ AudioPlayBar.onPlayStateChangeListener{
         if(null != mBinder)
         {
             Log.d("playservice","goBack");
-            if(mBinder.getService().isPlaying())
-                unbindService(mConn);
-            else
+            unbindService(mConn);
+            if(!mBinder.getService().isPlaying())
                 stopService(mIntentforservice);
         }
     }
@@ -189,6 +188,7 @@ AudioPlayBar.onPlayStateChangeListener{
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             mBinder = (PlayInfoBinder) iBinder;
             mBinder.getService().setCallback(BaseActivity.this);
+            Log.d("playservice","onServiceConnected");
             if(mHasPlayBar && mBinder.getService().isPlaying())
             {
                 addPlayBar();
