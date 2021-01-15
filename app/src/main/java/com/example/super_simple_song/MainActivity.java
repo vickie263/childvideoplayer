@@ -17,6 +17,7 @@ import com.example.super_simple_song.Play.PlayService;
 import com.example.super_simple_song.Play.VideoPlayActivity;
 import com.example.super_simple_song.database.Song;
 import com.example.super_simple_song.tools.PreferenceUtil;
+import com.example.super_simple_song.view.CustomLoading;
 
 import java.util.List;
 
@@ -29,6 +30,8 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
     private SongsContactor.IPresenter mainpagePresenter;
     private RecyclerView mSongsListView;
     private SongsListAdapter mAdapter;
+
+    private CustomLoading mCustomLoading;
 
     @Override
     protected void onServiceConnected() {
@@ -65,7 +68,9 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
 
     private void initData()
     {
+        mCustomLoading.show();
         mainpagePresenter.loadSongs();
+        mCustomLoading.dismiss();
     }
 
     private void initView()
@@ -76,6 +81,7 @@ public class MainActivity extends BaseActivity implements EasyPermissions.Permis
         setting.setOnClickListener(this);
         ImageView like = (ImageView) findViewById(R.id.mainpage_like_img);
         like.setOnClickListener(this);
+        mCustomLoading = new CustomLoading(this);
     }
 
     @Override
