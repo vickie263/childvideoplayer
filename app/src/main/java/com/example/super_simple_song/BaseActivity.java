@@ -85,8 +85,9 @@ AudioPlayBar.onPlayStateChangeListener{
     protected void goBack(){
         if(null != mBinder)
         {
-            Log.d("playservice","goBack");
             unbindService(mConn);
+            if(mHasPlayBar)
+                removePlayBar();
             if(!mBinder.getService().isPlaying())
                 stopService(mIntentforservice);
         }
@@ -96,7 +97,6 @@ AudioPlayBar.onPlayStateChangeListener{
     {
         if(null != mIntentforservice && null != mConn)
         {
-            Log.d("playservice","stopService");
             mBinder.getService().pausePlay();
             unbindService(mConn);
             removePlayBar();
